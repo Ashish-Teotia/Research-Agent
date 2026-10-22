@@ -1,0 +1,31 @@
+services:
+  research-agent:
+    build: .
+    environment:
+      AGENT_ROLE: research
+      AGENT_PUBLIC_URL: http://localhost:8001
+      PORT: 8000
+      LLM_PROVIDER: ${LLM_PROVIDER:-openai}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_BASE_URL: ${LLM_BASE_URL:-}
+      LLM_MODEL: ${LLM_MODEL:-gpt-4o-mini}
+      LLM_TEMPERATURE: ${LLM_TEMPERATURE:-0.2}
+    ports:
+      - "8001:8000"
+
+  writer-agent:
+    build: .
+    environment:
+      AGENT_ROLE: writer
+      AGENT_PUBLIC_URL: http://localhost:8002
+      RESEARCH_AGENT_URL: http://research-agent:8000
+      PORT: 8000
+      LLM_PROVIDER: ${LLM_PROVIDER:-openai}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_BASE_URL: ${LLM_BASE_URL:-}
+      LLM_MODEL: ${LLM_MODEL:-gpt-4o-mini}
+      LLM_TEMPERATURE: ${LLM_TEMPERATURE:-0.2}
+    ports:
+      - "8002:8000"
+    depends_on:
+      - research-agent
